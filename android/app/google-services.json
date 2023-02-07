@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "786090779059",
+    "firebase_url": "https://menuwise-ed7be-default-rtdb.firebaseio.com",
+    "project_id": "menuwise-ed7be",
+    "storage_bucket": "menuwise-ed7be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786090779059:android:544794b7ca27b1f1106bc6",
+        "android_client_info": {
+          "package_name": "com.menuwise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "786090779059-cub09ujb1d5eaahte7shebigil4qs3pt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOio3v1VfFQuuJaGT21YWSEypr57y2yMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "786090779059-cub09ujb1d5eaahte7shebigil4qs3pt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
