@@ -73,12 +73,29 @@ const vaccineDataSlice = (set, get) => ({
   }))
 })
 
+const restaurantDataSlice = (set,get) => ({
+  restaurantData: null,
+  restaurantId: undefined,
+  catSelectedId: undefined,
+  setRestaurantData : payload => set( prev => ({
+    restaurantData : payload
+  })),
+  setRestaurantId : payload => set(prev => ({
+    restaurantId: payload
+  })),
+  setcatSelectedId : payload => set(prev => ({
+    catSelectedId: payload
+  }))
+})
+
+
 
 export const useStore = create(
   devtools((set, get) => ({
     ...appInfoSlice(set, get),
     ...petInfoSlice(set, get),
     ...appointmentSlice(set,get),
-    ...vaccineDataSlice(set,get)
+    ...vaccineDataSlice(set,get),
+    ...restaurantDataSlice(set,get)
   })),
 );
