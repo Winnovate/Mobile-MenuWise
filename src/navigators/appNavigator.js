@@ -8,8 +8,7 @@ import AppointmentScreen from '../screens/appointment';
 import QrScannerScreen from '../screens/qrScanner';
 import MenuCatScreen from '../screens/menuCat';
 import MenuItmesScreen from '../screens/items';
-
-
+import OrdersScreen from '../screens/orders';
 
 const Stack = createNativeStackNavigator();
 
@@ -75,6 +74,18 @@ const AppNavigator = () => {
           component={MenuItmesScreen}
           options={{
             title: 'Menu',
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.background,
+            },
+          }}
+        />
+
+        <Stack.Screen
+          name="Orders"
+          component={OrdersScreen}
+          options={{
+            title: 'Order Cart',
             headerTintColor: colors.text,
             headerStyle: {
               backgroundColor: colors.background,
