@@ -3,20 +3,15 @@ import {devtools} from 'zustand/middleware';
 
 const appInfoSlice = (set, get) => ({
   user: {
-    data: {},
-    error: {},
-    loading: false,
-    userId: '',
+    name: '',
     isAuthenticated: false,
   },
   initial: false,
   manageUser: payload =>
     set(prev => ({
       ...prev,
-      user: {...payload, isAuthenticated: prev.user.isAuthenticated},
+      user: {...payload},
     })),
-  setIsAuthenticated: payload =>
-    set(prev => ({...prev, user: {...prev.user, isAuthenticated: payload}})),
   setIsInitial: payload => set(prev => ({...prev, initial: payload})),
 });
 

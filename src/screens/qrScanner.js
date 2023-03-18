@@ -10,17 +10,9 @@ const QrScannerScreen = ({navigation}) => {
   const setRestaurantId = useStore(state => state.setRestaurantId);
 
   const onSuccess = data => {
-    console.log(data);
     setRestaurantId(data?.data);
     navigation.goBack();
   };
-
-  // setTimeout(() => {
-  //   const data = {
-  //     data: '0d73ce9a-63bf-425a-b051-858ce0e3b249',
-  //   };
-  //   onSuccess(data);
-  // }, 2000);
 
   return (
     <>

@@ -9,6 +9,7 @@ import QrScannerScreen from '../screens/qrScanner';
 import MenuCatScreen from '../screens/menuCat';
 import MenuItmesScreen from '../screens/items';
 import OrdersScreen from '../screens/orders';
+import SpeakToSearchScreen from '../screens/speakToSearch';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,28 +22,6 @@ const AppNavigator = () => {
           name="HomeScreen"
           component={HomeScreen}
           options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Settings"
-          component={SettingsScreen}
-          options={{
-            title: 'Settings',
-            headerTintColor: colors.text,
-            headerStyle: {
-              backgroundColor: colors.background,
-            },
-          }}
-        />
-        <Stack.Screen
-          name="Appointment"
-          component={AppointmentScreen}
-          options={{
-            title: 'Appointments',
-            headerTintColor: colors.text,
-            headerStyle: {
-              backgroundColor: colors.background,
-            },
-          }}
         />
 
         <Stack.Screen
@@ -86,6 +65,18 @@ const AppNavigator = () => {
           component={OrdersScreen}
           options={{
             title: 'Order Cart',
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.background,
+            },
+          }}
+        />
+
+        <Stack.Screen
+          name="SpeakToText"
+          component={SpeakToSearchScreen}
+          options={{
+            title: 'Speak to Search',
             headerTintColor: colors.text,
             headerStyle: {
               backgroundColor: colors.background,

@@ -1,4 +1,4 @@
-import {Box, Text, Flex, Heading} from 'native-base';
+import {Box, Text, Flex} from 'native-base';
 import {StyleSheet, StatusBar} from 'react-native';
 import React from 'react';
 import {colors} from '../../apptheme';
@@ -8,10 +8,7 @@ const Login = ({navigation}) => {
   return (
     <Box background={colors.background} flex={'1'} paddingX={5} safeArea>
       <StatusBar backgroundColor="transparent" translucent={true} />
-      <Box marginTop={'50%'}>
-        <Heading letterSpacing={2} size={'xl'} color={colors.text}>
-          Log In
-        </Heading>
+      <Box flex={1}>
         <LoginForm navigation={navigation} />
       </Box>
     </Box>

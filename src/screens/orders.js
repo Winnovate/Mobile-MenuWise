@@ -15,6 +15,7 @@ const OrdersScreen = ({navigation}) => {
   const [activeSection, setActiveSection] = useState('name');
   const [active, setActive] = useState(0);
   const orders = useStore(state => state.orders);
+  const username = useStore(state => state.user.name);
 
   useEffect(() => {
     if (orders && orders?.length) {
@@ -59,7 +60,7 @@ const OrdersScreen = ({navigation}) => {
     const orderItemsToString = orders?.map(order => order?.name).join(',');
     const orderID = uuid.v4();
     const orderPayload = {
-      customerName: auth().currentUser.displayName,
+      customerName: username,
       orderItems: orderItemsToString,
       orderStatus: 'Pending',
       'order-id': orderID,
