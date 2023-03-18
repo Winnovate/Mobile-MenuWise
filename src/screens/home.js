@@ -1,38 +1,27 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Image,
-  Stack,
-  Text,
-  VStack,
-} from 'native-base';
-import {Linking} from 'react-native';
+import {Box, Button, HStack, Text, VStack} from 'native-base';
 import {getAllData} from '../utils/user';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {colors} from '../../apptheme';
-import {useStore} from '../../zustand/store/useStore';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import Tts from 'react-native-tts';
-import MultiTap from 'react-native-multitap';
-import {fetchRestaurantFirebase} from '../utils/restaurant';
-import LayoutWrapper from '../components/common/LayoutWrapper';
+import LayoutWrapper from '../components/wrappers/LayoutWrapper';
 import useLocation from '../hooks/useLocation';
 import Geolocation from '@react-native-community/geolocation';
+import GestureTapWrapper from '../components/wrappers/GestureTapWrapper';
+import {useStore} from '../../zustand/store/useStore';
+import {fetchRestaurantFirebase} from '../utils/restaurant';
 import {fetchRestraurantByLocation} from '../utils/fetchRestraurantByLocation';
+import {swipeDirections} from 'react-native-swipe-gestures';
+import SearchByLocation from '../components/home/SearchByLocation';
 
 const HomeScreen = ({navigation}) => {
-  const isGranted = useLocation();
+  const [isGranted, coords, watchId] = useLocation();
   const user = useStore(state => state.user);
   const isAuthenticated = useStore(state => state.user.isAuthenticated);
   const setRestaurantId = useStore(state => state.setRestaurantId);
   const setRestaurantData = useStore(state => state.setRestaurantData);
   const restaurantId = useStore(state => state.restaurantId);
   const [active, setActive] = useState(0);
-  const [coords, setCoords] = useState(null);
-  const [watchId, setWatchId] = useState(null);
   const [resByLoc, setResByLoc] = useState(null);
   const invokesFuntions = {
     1: () => {
@@ -55,45 +44,16 @@ const HomeScreen = ({navigation}) => {
     },
   };
 
-  Tts.setDefaultLanguage('fr-FR');
+  useEffect(() => {
+    Tts.stop();
+  }, []);
 
   useEffect(() => {
-    if (isGranted === true) {
-      // Geolocation.getCurrentPosition(info => console.log(info));
-      const watchId = Geolocation.watchPosition(
-        position => {
-          console.log(position);
-          if (position?.coords?.accuracy < 20) {
-            setCoords({
-              latitude: position?.coords?.latitude,
-              longitude: position?.coords?.longitude,
-            });
-            console.log({
-              latitude: position?.coords?.latitude,
-              longitude: position?.coords?.longitude,
-            });
-          }
-        },
-        error => Alert.alert('WatchPosition Error', JSON.stringify(error)),
-        {
-          interval: 1000,
-          enableHighAccuracy: true,
-          distanceFilter: 10,
-        },
-      );
-      setWatchId(watchId);
-    } else if (isGranted === false) {
-      alert('Please allow location access');
-    }
-  }, [isGranted]);
-
-  useEffect(() => {
-    if (active === 0) {
+    if (active === 0 && isGranted) {
       if (coords?.latitude && coords?.longitude) {
         Geolocation.clearWatch(watchId);
         fetchRestraurantByLocation(coords).then(res => {
           if (res?.length) {
-            // Tts.stop();
             Tts.speak(
               `We found your location, You are at ${res[0]?.name}}. Double tap to confirm it. Single tap to replay. Swipe up for other options.`,
             );
@@ -104,7 +64,7 @@ const HomeScreen = ({navigation}) => {
         });
       }
     }
-  }, [coords, active]);
+  }, [coords, active, isGranted]);
 
   useEffect(() => {
     if (isAuthenticated && user?.uid) {
@@ -115,9 +75,7 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     Tts.stop();
     if (active === 0) {
-      Tts.speak(
-        'Welcome to Menu Wise, detecting restaurant by location. Please wait...',
-      );
+      Tts.speak('Welcome to Menu Wise, detecting restaurant by location...');
     } else {
       Tts.speak(componentArray[active - 1].text);
     }
@@ -134,24 +92,17 @@ const HomeScreen = ({navigation}) => {
   }, [restaurantId]);
 
   const onSwipe = (gestureName, gestureState) => {
-    const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
-    // this.setState({gestureName: gestureName});
+    const {SWIPE_UP, SWIPE_DOWN} = swipeDirections;
     switch (gestureName) {
       case SWIPE_UP:
         if (active === 0) setActive(2);
         else setActive(active - 1);
-
         break;
       case SWIPE_DOWN:
         if (active === 2) setActive(0);
         else setActive(active + 1);
         break;
     }
-  };
-
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
   };
 
   const handleDoubleTap = () => {
@@ -208,78 +159,31 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <LayoutWrapper>
-      {active === 0 ? (
-        <Box
-          flex={1}
-          width="100%"
-          flexDirection="column"
-          alignItems={'center'}
-          justifyContent="space-around"
-          backgroundColor={colors.background}>
-          <Ionicons
-            name="location-outline"
-            color={colors.headeline}
-            size={120}
+      <GestureTapWrapper
+        onSwipe={onSwipe}
+        handleDoubleTap={handleDoubleTap}
+        handleSingleTap={handleSingleTap}>
+        {active === 0 ? (
+          <SearchByLocation
+            name={resByLoc?.name}
+            address={resByLoc?.generalInfo?.address}
           />
-          <Box
-            flex={1}
-            // justifyItems="center"
-            width="100%"
-            justifyContent={'center'}
-            alignItems={'center'}>
-            {resByLoc ? (
-              <VStack justifyContent={'center'} alignItems="center">
-                <Text fontSize={'2xl'} color={'white'} fontWeight="semibold">
-                  {resByLoc?.name}
-                </Text>
-                <Text fontSize={'2xl'} color={'white'}>
-                  {resByLoc?.generalInfo?.address}
-                </Text>
-              </VStack>
-            ) : (
-              <Text fontSize={'2xl'} color={'white'} fontWeight="semibold">
-                Please Wait...
-              </Text>
-            )}
-          </Box>
-        </Box>
-      ) : (
-        componentArray?.map(com => {
-          return (
-            <Box
-              mb="2"
-              borderRadius={10}
-              flex={1}
-              key={com.id}
-              borderWidth={3}
-              borderColor={active === com.id ? 'white' : '#3b3b44'}>
-              {com.component}
-            </Box>
-          );
-        })
-      )}
-
-      <GestureRecognizer
-        onSwipe={(direction, state) => onSwipe(direction, state)}
-        config={config}
-        style={{
-          flex: 1,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          zIndex: 100,
-          backgroundColor: 'rgba(0,0,0,0)',
-        }}>
-        <MultiTap
-          onDoubleTap={() => handleDoubleTap()}
-          onSingleTap={() => handleSingleTap()}
-          delay={300}>
-          <Box height={'full'}>{/* <Text>Tap Me</Text> */}</Box>
-        </MultiTap>
-        {/* <Text>onSwipe callback received gesture: {this.state.gestureName}</Text> */}
-      </GestureRecognizer>
+        ) : (
+          componentArray?.map(com => {
+            return (
+              <Box
+                mb="2"
+                borderRadius={10}
+                flex={1}
+                key={com.id}
+                borderWidth={3}
+                borderColor={active === com.id ? 'white' : '#3b3b44'}>
+                {com.component}
+              </Box>
+            );
+          })
+        )}
+      </GestureTapWrapper>
     </LayoutWrapper>
   );
 };

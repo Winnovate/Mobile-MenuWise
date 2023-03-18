@@ -1,7 +1,7 @@
 import {Icon, InfoIcon, Input, Text, Button, VStack, Box} from 'native-base';
 import React from 'react';
 import {Vibration} from 'react-native';
-import LayoutWrapper from '../components/common/LayoutWrapper';
+import LayoutWrapper from '../components/wrappers/LayoutWrapper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {colors} from '../../apptheme';
 import Tts from 'react-native-tts';
