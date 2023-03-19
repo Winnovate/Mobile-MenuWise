@@ -6,6 +6,9 @@ const appInfoSlice = (set, get) => ({
     name: '',
     isAuthenticated: false,
   },
+  app: {
+    lang: 'fr',
+  },
   initial: false,
   manageUser: payload =>
     set(prev => ({
@@ -13,6 +16,7 @@ const appInfoSlice = (set, get) => ({
       user: {...payload},
     })),
   setIsInitial: payload => set(prev => ({...prev, initial: payload})),
+  setLang: payload => set(prev => ({...prev, app: {lang: payload}})),
 });
 
 const restaurantDataSlice = (set, get) => ({

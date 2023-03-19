@@ -13,8 +13,11 @@ import Voice from '@react-native-voice/voice';
 import {useState, useEffect} from 'react';
 
 import {fetchRestraurantBySearch} from '../utils/fetchRestraurantBySearch';
+import GestureTapWrapper from '../components/wrappers/GestureTapWrapper';
+import {commonText, homeText} from '../localize/languages';
 
 const SpeakToSearchScreen = ({navigation}) => {
+  const lang = useStore(state => state.app.lang);
   const setRestaurantId = useStore(state => state.setRestaurantId);
   const [voiceData, setVoiceData] = useState({
     recognized: '',
@@ -32,12 +35,12 @@ const SpeakToSearchScreen = ({navigation}) => {
     if (active === -1) {
       Tts.stop();
       Tts.speak(
-        'Press and hold screen, start speaking the restaurant name to search it.',
+        `${homeText['Press-and-hold-screen,-start-speaking-the-restaurant-name-to-search-it'][lang]}`,
       );
     } else if (active > -1 && restList?.length) {
       Tts.stop();
       Tts.speak(
-        `${restList[active]?.['item']?.['name']} at ${restList[active]?.['item']?.['generalInfo']?.['address']}. Double tap to select. Single tap to listen again.`,
+        `${restList[active]?.['item']?.['name']} at ${restList[active]?.['item']?.['generalInfo']?.['address']}. ${commonText['double-tap-to-confirm-it.'][lang]}. ${commonText['single-tap-to-replay.'][lang]}`,
       );
     }
   }, [active]);
@@ -129,31 +132,6 @@ const SpeakToSearchScreen = ({navigation}) => {
     }
   };
 
-  const cancelRecognizing = async () => {
-    try {
-      await Voice.cancel();
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const destroyRecognizer = async () => {
-    try {
-      await Voice.destroy();
-    } catch (e) {
-      console.error(e);
-    }
-    setVoiceData({
-      recognized: '',
-      pitch: '',
-      error: '',
-      started: '',
-      results: [],
-      partialResults: [],
-      end: '',
-    });
-  };
-
   const handleDoubleTap = () => {
     setRestaurantId(restList[active]?.['item']?.['id']);
     navigation.goBack();
@@ -189,84 +167,61 @@ const SpeakToSearchScreen = ({navigation}) => {
     }
   };
 
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
-  };
-
   return (
     <LayoutWrapper justify="center" flexDirection="column">
-      <Button
+      <GestureTapWrapper
+        onSwipe={onSwipe}
+        handleDoubleTap={() => handleDoubleTap()}
+        handleSingleTap={() => handleSingleTap()}
         onPressIn={startRecognizing}
-        onPressOut={stopRecognizing}
-        backgroundColor={colors.primary}
-        borderWidth={3}
-        borderColor={active === -1 ? 'white' : `${colors.primary}`}
-        width={'32'}
-        height="32"
-        borderRadius={'full'}>
-        <Ionicons name="mic" color={colors.headeline} size={36} />
-      </Button>
-      {restList?.length ? (
-        <Box width="full" mt={6}>
-          <Text
-            fontSize={'xl'}
-            mb="3"
-            fontWeight={'hairline'}
-            color={colors.headeline}>
-            Search Result:
-          </Text>
-          {restList?.map((res, idx) => {
-            return (
-              <VStack
-                borderWidth={3}
-                borderColor={active === idx ? 'white' : '#3b3b44'}
-                key={res?.['item']?.['id']}
-                p="4"
-                pl={3}
-                backgroundColor={colors.backgroundLight}
-                borderRadius={6}>
-                <Text
-                  fontWeight={'bold'}
-                  fontSize={16}
-                  color={colors.headeline}>
-                  {res?.['item']?.['name']}
-                </Text>
-                <Text
-                  fontWeight={'thin'}
-                  fontStyle="italic"
-                  fontSize={12}
-                  color={colors.headeline}>
-                  {res?.['item']?.['generalInfo']?.['address']}
-                </Text>
-              </VStack>
-            );
-          })}
-        </Box>
-      ) : null}
-
-      <GestureRecognizer
-        onSwipe={(direction, state) => onSwipe(direction, state)}
-        config={config}
-        style={{
-          flex: 1,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          backgroundColor: 'rgba(0,0,0,0.1)',
-        }}>
-        <MultiTap
-          onDoubleTap={() => handleDoubleTap()}
-          onSingleTap={() => handleSingleTap()}
-          onPressIn={startRecognizing}
-          onPressOut={stopRecognizing}
-          delay={300}>
-          <Box height={'full'}>{/* <Text>Tap Me</Text> */}</Box>
-        </MultiTap>
-        {/* <Text>onSwipe callback received gesture: {this.state.gestureName}</Text> */}
-      </GestureRecognizer>
+        onPressOut={stopRecognizing}>
+        <Button
+          backgroundColor={colors.primary}
+          borderWidth={3}
+          borderColor={active === -1 ? 'white' : `${colors.primary}`}
+          width={'32'}
+          height="32"
+          borderRadius={'full'}>
+          <Ionicons name="mic" color={colors.headeline} size={36} />
+        </Button>
+        {restList?.length ? (
+          <Box width="full" mt={6}>
+            <Text
+              fontSize={'xl'}
+              mb="3"
+              fontWeight={'hairline'}
+              color={colors.headeline}>
+              Search Result:
+            </Text>
+            {restList?.map((res, idx) => {
+              return (
+                <VStack
+                  borderWidth={3}
+                  borderColor={active === idx ? 'white' : '#3b3b44'}
+                  key={res?.['item']?.['id']}
+                  p="4"
+                  pl={3}
+                  backgroundColor={colors.backgroundLight}
+                  borderRadius={6}>
+                  <Text
+                    fontWeight={'bold'}
+                    fontSize={16}
+                    color={colors.headeline}>
+                    {res?.['item']?.['name']}
+                  </Text>
+                  <Text
+                    fontWeight={'thin'}
+                    fontStyle="italic"
+                    fontSize={12}
+                    color={colors.headeline}>
+                    {res?.['item']?.['generalInfo']?.['address']}
+                  </Text>
+                </VStack>
+              );
+            })}
+          </Box>
+        ) : null}
+      </GestureTapWrapper>
     </LayoutWrapper>
   );
 };

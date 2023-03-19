@@ -1,26 +1,24 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Box, Button, Flex, VStack, ScrollView, Stack, Text} from 'native-base';
-import {StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Box, Button, VStack, Text} from 'native-base';
 import {useStore} from '../../zustand/store/useStore';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {colors} from '../../apptheme';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import Tts from 'react-native-tts';
 import MultiTap from 'react-native-multitap';
+import LocalizeText from '../utils/localizeText';
+import {itemsText} from '../localize/languages';
 
 const MenuItmesScreen = ({navigation}) => {
+  const lang = useStore(state => state.app.lang);
   const setRestaurantId = useStore(state => state.setRestaurantId);
   const catSelectedId = useStore(state => state.catSelectedId);
   const menuItems = useStore(state => state.restaurantData?.items);
   const [menuItemsByCat, setMenuItemsByCat] = useState([]);
-  const restaurantData = useStore(state => state.restaurantData);
   const [activeSection, setActiveSection] = useState('name');
   const setOrders = useStore(state => state.setOrders);
   const [isInOrderList, setIsInOrderList] = useState([]);
 
-  const [menuCat, setMenuCat] = useState([]);
   const [active, setActive] = useState(0);
-  const [itemId, setItemId] = useState(0);
 
   useEffect(() => {
     if (menuItems && catSelectedId) {
@@ -44,7 +42,7 @@ const MenuItmesScreen = ({navigation}) => {
         if (isInOrderList.includes(active)) {
           Tts.speak(
             menuItemsByCat[active]['name'] +
-              ' already added to order, double tap to remove it. If you want to go to order screen long press the screen.',
+              ` ${itemsText['already-added-to-order'][lang]}, ${itemsText['double tap to remove it'][lang]}. ${itemsText['If-you-want-to-go-to-order-screen-long-press-the-screen'][lang]} `,
           );
         } else {
           Tts.speak('Double tap to order ' + menuItemsByCat[active]['name']);
@@ -104,18 +102,33 @@ const MenuItmesScreen = ({navigation}) => {
         setIsInOrderList([...isInOrderList, active]);
         Tts.speak(
           menuItemsByCat[active]?.name +
-            ' is added to your order list. Long press to go to order list.',
+            itemsText[
+              'is-added-to-your-order-list.-Long-press-to-go-to-order-list'
+            ][lang],
         );
       } else {
         setOrders({data: menuItemsByCat[active], action: 'delete'});
         const updatedList = isInOrderList.filter(id => id !== active);
         setIsInOrderList(updatedList);
         Tts.speak(
-          menuItemsByCat[active]?.name + ' is removed from your order list.',
+          menuItemsByCat[active]?.name +
+            itemsText['is-removed-from-your-order-list'][lang],
         );
       }
     }
   };
+
+  const handleLocalize = async () => {
+    console.log(
+      await LocalizeText(
+        (to = 'fr'),
+        (from = 'en'),
+        (dataArray = [menuItemsByCat[active]?.details]),
+      ),
+    );
+  };
+
+  handleLocalize();
 
   const handleSingleTap = () => {
     alert('Single Tap');
@@ -166,8 +179,8 @@ const MenuItmesScreen = ({navigation}) => {
             borderColor={activeSection === 'addToOrder' ? 'white' : '#3b3b44'}
             background={colors.primary}>
             {!isInOrderList.includes(active)
-              ? 'Add to Order'
-              : 'Added to the Order List ✅'}
+              ? itemsText['add-to-order'][lang]
+              : itemsText['Added-to-the-Order-List'][lang] + '✅'}
           </Button>
         </VStack>
         <GestureRecognizer

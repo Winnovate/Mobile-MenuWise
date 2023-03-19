@@ -6,6 +6,7 @@ const LayoutWrapper = ({
   children,
   justify = 'space-between',
   flexDirection = 'column',
+  noFlex,
 }) => {
   return (
     <Box
@@ -16,14 +17,20 @@ const LayoutWrapper = ({
         backgroundColor: colors.background,
         color: 'white',
       }}>
-      <Stack
-        marginTop={6}
-        flexDirection={flexDirection}
-        justifyContent={flexDirection === 'row' ? justify : 'flex-start'}
-        alignItems={flexDirection === 'column' ? justify : 'flex-start'}
-        flex={1}>
-        {children}
-      </Stack>
+      {noFlex ? (
+        <Stack marginTop={6} flex={1}>
+          {children}
+        </Stack>
+      ) : (
+        <Stack
+          marginTop={6}
+          flexDirection={flexDirection}
+          justifyContent={flexDirection === 'row' ? justify : 'flex-start'}
+          alignItems={flexDirection === 'column' ? justify : 'flex-start'}
+          flex={1}>
+          {children}
+        </Stack>
+      )}
     </Box>
   );
 };

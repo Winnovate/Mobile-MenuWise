@@ -13,8 +13,10 @@ import {fetchRestaurantFirebase} from '../utils/restaurant';
 import {fetchRestraurantByLocation} from '../utils/fetchRestraurantByLocation';
 import {swipeDirections} from 'react-native-swipe-gestures';
 import SearchByLocation from '../components/home/SearchByLocation';
+import {commonText, homeText, loginText} from '../localize/languages';
 
 const HomeScreen = ({navigation}) => {
+  const lang = useStore(state => state.app.lang);
   const [isGranted, coords, watchId] = useLocation();
   const user = useStore(state => state.user);
   const isAuthenticated = useStore(state => state.user.isAuthenticated);
@@ -45,6 +47,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   useEffect(() => {
+    Tts.setDefaultLanguage(lang);
     Tts.stop();
   }, []);
 
@@ -55,7 +58,8 @@ const HomeScreen = ({navigation}) => {
         fetchRestraurantByLocation(coords).then(res => {
           if (res?.length) {
             Tts.speak(
-              `We found your location, You are at ${res[0]?.name}}. Double tap to confirm it. Single tap to replay. Swipe up for other options.`,
+              `${homeText['we-found-your-location,'][lang]} ${homeText['you-are-at'][lang]} ${res[0]?.name}}. ${commonText['double-tap-to-confirm-it.'][lang]}. ${commonText['single-tap-to-replay.'][lang]}.
+              ${commonText['swipe-up-for-other-options'][lang]}`,
             );
             setResByLoc(res[0]);
           } else {
@@ -75,7 +79,7 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     Tts.stop();
     if (active === 0) {
-      Tts.speak('Welcome to Menu Wise, detecting restaurant by location...');
+      Tts.speak(homeText['We-are-detecting-restaurant-by-location'][lang]);
     } else {
       Tts.speak(componentArray[active - 1].text);
     }
@@ -83,11 +87,13 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     if (typeof restaurantId === 'string' && restaurantId.length > 0) {
-      fetchRestaurantFirebase(restaurantId, setRestaurantData).then(res => {
-        if (res.status) {
-          navigation.navigate('MenuCat');
-        }
-      });
+      navigation.navigate('MenuCat');
+      fetchRestaurantFirebase(restaurantId, setRestaurantData, lang).then(
+        res => {
+          if (res.status) {
+          }
+        },
+      );
     }
   }, [restaurantId]);
 
@@ -122,7 +128,7 @@ const HomeScreen = ({navigation}) => {
   const componentArray = [
     {
       id: 1,
-      text: 'Double tap to scan qr code.',
+      text: homeText['Double-tap-to-scan-qr-code'][lang],
       component: (
         <HStack flex="1">
           <Button width="full" backgroundColor={colors.backgroundLight}>
@@ -140,7 +146,7 @@ const HomeScreen = ({navigation}) => {
     },
     {
       id: 2,
-      text: 'Double tap to search by speech',
+      text: homeText['Double-tap-to-search-by-speech'][lang],
       component: (
         <HStack flex="1">
           <Button
@@ -149,7 +155,7 @@ const HomeScreen = ({navigation}) => {
             backgroundColor={colors.backgroundLight}>
             <VStack alignItems="center">
               <Ionicons name="mic" color={colors.headeline} size={120} />
-              <Text color="white">Speak to Search</Text>
+              <Text color="white">{homeText['speak-to-search'][lang]}</Text>
             </VStack>
           </Button>
         </HStack>

@@ -9,8 +9,10 @@ import MultiTap from 'react-native-multitap';
 import auth from '@react-native-firebase/auth';
 import uuid from 'react-native-uuid';
 import {postOrdersFirebase} from '../utils/restaurant';
+import {ordersText} from '../localize/languages';
 
 const OrdersScreen = ({navigation}) => {
+  const lang = useStore(state => state.app.lang);
   const restaurantId = useStore(state => state.restaurantId);
   const [activeSection, setActiveSection] = useState('name');
   const [active, setActive] = useState(0);
@@ -18,10 +20,14 @@ const OrdersScreen = ({navigation}) => {
   const username = useStore(state => state.user.name);
 
   useEffect(() => {
+    Tts.stop();
     if (orders && orders?.length) {
       let text = orders?.map(order => order?.name).join(',');
       text =
-        'Your order contains ' + text + '. Long press to confirm your order.';
+        ordersText['Your-order-contains'][lang] +
+        text +
+        '. ' +
+        ordersText['long-press-to-confirm-your-order'][lang];
       Tts.speak(text);
     }
   }, [orders]);
@@ -69,8 +75,12 @@ const OrdersScreen = ({navigation}) => {
 
     postOrdersFirebase(orderPayload, restaurantId, orderID).then(res => {
       if (res.status) {
-        Tts.speak('Order is confirmed. Enjoy your meal. Have a nice day.');
-        alert('order Confirmed');
+        Tts.speak(
+          ordersText['order-is-confirmed.-Enjoy-your-meal.-Have-a-nice-day'][
+            lang
+          ],
+        );
+        alert(ordersText['order-is-confirmed'][lang]);
       }
     });
   };

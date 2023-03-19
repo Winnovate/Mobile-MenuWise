@@ -1,31 +1,16 @@
-import {
-  Box,
-  Stack,
-  Input,
-  Icon,
-  Button,
-  Text,
-  Image,
-  Flex,
-  Heading,
-} from 'native-base';
+import {Box, Stack, Input, Text, Heading} from 'native-base';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import auth from '@react-native-firebase/auth';
 import {colors} from '../../../apptheme';
 import {useStore} from '../../../zustand/store/useStore';
 import Tts from 'react-native-tts';
 import MultiTap from 'react-native-multitap';
-import Voice, {
-  SpeechRecognizedEvent,
-  SpeechResultsEvent,
-  SpeechErrorEvent,
-} from '@react-native-voice/voice';
+import Voice from '@react-native-voice/voice';
 import {View, Vibration} from 'react-native';
+import {commonText, loginText} from '../../localize/languages';
 
 const LoginForm = () => {
+  const getLang = useStore(state => state.app.lang);
   const [name, setName] = useState('');
   const setUserData = useStore(state => state.manageUser);
   const [voiceData, setVoiceData] = useState({
@@ -40,8 +25,11 @@ const LoginForm = () => {
 
   useEffect(() => {
     Tts.stop();
+    Tts.setDefaultLanguage(getLang);
     Tts.speak(
-      'Welcome to Menu Wise, Long press the screen and Speak your name to setup the app.',
+      loginText[
+        'Welcome,-Long-press-the-screen-and-Speak-your-name-to-setup-the-app.'
+      ][getLang],
     );
   }, []);
 
@@ -84,7 +72,7 @@ const LoginForm = () => {
 
   const onSpeechResults = event => {
     Tts.speak(
-      `Welcome ${event?.value[0]}. To comfirm double tap the screen your name`,
+      `${commonText['welcome'][getLang]} ${event?.value[0]}. ${loginText['double-tap-to-confirm-you-name'][getLang]}`,
     );
     setName(event?.value[0]);
   };
@@ -109,34 +97,26 @@ const LoginForm = () => {
     }
   };
 
-  const stopRecognizing = async () => {
-    Vibration.vibrate();
-    try {
-      await Voice.stop();
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   const handleDoubleTap = async () => {
     try {
       await AsyncStorage.setItem('@name', name);
       setUserData({name, isAuthenticated: true});
     } catch (e) {
       // saving error
+      console.log(e);
     }
   };
   return (
     <Stack space={4} w="100%" flex={1} justifyContent="center">
       <Heading mb={'18'} letterSpacing={2} size={'xl'} color={colors.text}>
-        Welcome to MenuWise
+        {commonText['welcome-to-menu-wise'][getLang]}
       </Heading>
       <Input
         borderWidth="1"
         borderColor="gray.500"
         fontSize="16px"
         background={colors.background}
-        placeholder="Name"
+        placeholder={loginText['name'][getLang]}
         color={colors.text}
         height={12}
         onChangeText={setName}

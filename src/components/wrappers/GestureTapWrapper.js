@@ -8,6 +8,8 @@ const GestureTapWrapper = ({
   handleDoubleTap,
   handleSingleTap,
   handleLongPress,
+  onPressIn,
+  onPressOut,
   children,
 }) => {
   const config = {
@@ -37,6 +39,8 @@ const GestureTapWrapper = ({
         <MultiTap
           onDoubleTap={() => handleDoubleTap()}
           onSingleTap={() => handleSingleTap()}
+          onPressIn={onPressIn}
+          onPressOut={onPressOut}
           handleLongPress={() => handleLongPress()}
           delay={300}>
           <Box height={'full'}></Box>

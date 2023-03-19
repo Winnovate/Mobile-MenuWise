@@ -1,5 +1,5 @@
-import {Box, Text, Flex} from 'native-base';
-import {StyleSheet, StatusBar} from 'react-native';
+import {Box} from 'native-base';
+import {StatusBar} from 'react-native';
 import React from 'react';
 import {colors} from '../../apptheme';
 import LoginForm from '../components/login/loginForm';
@@ -15,13 +15,3 @@ const Login = ({navigation}) => {
   );
 };
 export default Login;
-
-const styles = StyleSheet.create({
-  backgroundVideo: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-  },
-});
