@@ -1,4 +1,4 @@
-import {Heading, HStack, VStack} from 'native-base';
+import {Heading, HStack, VStack, Box} from 'native-base';
 import React, {useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GestureTapWrapper from '../wrappers/GestureTapWrapper';

@@ -30,19 +30,19 @@ const useLocation = () => {
         setGranted(true);
         const watchId = Geolocation.watchPosition(
           position => {
-            console.log(position);
-            if (position?.coords?.accuracy < 20) {
+            console.log(position, '-----------------------------------');
+            if (position?.coords?.accuracy < 100) {
               setCoords({
                 latitude: position?.coords?.latitude,
                 longitude: position?.coords?.longitude,
               });
             }
           },
-          error => Alert.alert('WatchPosition Error', JSON.stringify(error)),
+          error => alert('WatchPosition Error', JSON.stringify(error)),
           {
             interval: 1000,
-            enableHighAccuracy: true,
-            distanceFilter: 10,
+            // enableHighAccuracy: true,
+            distanceFilter: 0,
           },
         );
         setWatchId(watchId);

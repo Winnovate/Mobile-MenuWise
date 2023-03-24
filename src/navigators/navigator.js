@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import SplashScreen from '../screens/splashScreen';
 import AppNavigator from './appNavigator';
-import AuthNavigator from './authNavigator';
+import InitialNavigator from './initialNavigator';
 
 const Navigator = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +26,6 @@ const Navigator = () => {
       } else {
         setUserData({name: '', isAuthenticated: false});
       }
-
       if (selectedLang !== null) {
         setLang(selectedLang);
       } else {
@@ -45,7 +44,7 @@ const Navigator = () => {
       ) : isAuthenticated ? (
         <AppNavigator />
       ) : (
-        <AuthNavigator />
+        <InitialNavigator />
       )}
     </NavigationContainer>
   );

@@ -5,7 +5,7 @@ import InitialScreen from '../screens/initialScreeen';
 
 const Stack = createNativeStackNavigator();
 
-const AuthNavigator = () => {
+const InitialNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={({route}) => ({
@@ -16,4 +16,4 @@ const AuthNavigator = () => {
     </Stack.Navigator>
   );
 };
-export default AuthNavigator;
+export default InitialNavigator;

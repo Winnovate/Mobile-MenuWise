@@ -45,7 +45,10 @@ const MenuItmesScreen = ({navigation}) => {
               ` ${itemsText['already-added-to-order'][lang]}, ${itemsText['double tap to remove it'][lang]}. ${itemsText['If-you-want-to-go-to-order-screen-long-press-the-screen'][lang]} `,
           );
         } else {
-          Tts.speak('Double tap to order ' + menuItemsByCat[active]['name']);
+          Tts.speak(
+            itemsText['double-tap-to-order'][lang] +
+              menuItemsByCat[active]['name'],
+          );
         }
       } else if (activeSection === 'details') {
         Tts.speak(menuItemsByCat[active]['details']);
@@ -86,12 +89,6 @@ const MenuItmesScreen = ({navigation}) => {
             return setActiveSection('addToOrder');
           }
         }
-      case SWIPE_LEFT:
-        alert('Left');
-        break;
-      case SWIPE_RIGHT:
-        alert('right');
-        break;
     }
   };
 

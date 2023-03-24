@@ -45,12 +45,6 @@ const OrdersScreen = ({navigation}) => {
         return;
       case SWIPE_DOWN:
         return;
-      case SWIPE_LEFT:
-        alert('Left');
-        break;
-      case SWIPE_RIGHT:
-        alert('right');
-        break;
     }
   };
 

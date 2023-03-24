@@ -19,6 +19,17 @@ const appInfoSlice = (set, get) => ({
   setLang: payload => set(prev => ({...prev, app: {lang: payload}})),
 });
 
+const appSpeakSlice = (set, get) => ({
+  speakScreen: false,
+  speakText: '',
+  startSpeaking: false,
+  setSpeak: payload =>
+    set(prev => ({
+      ...prev,
+      ...payload,
+    })),
+});
+
 const restaurantDataSlice = (set, get) => ({
   restaurantData: null,
   restaurantId: undefined,
@@ -60,5 +71,6 @@ export const useStore = create(
     ...appInfoSlice(set, get),
     ...restaurantDataSlice(set, get),
     ...orderSlice(set, get),
+    ...appSpeakSlice(set, get),
   })),
 );

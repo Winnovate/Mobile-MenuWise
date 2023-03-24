@@ -33,7 +33,7 @@ export const fetchRestraurantByLocation = async coords => {
   });
 
   restLocCoords = restLocCoords
-    ?.filter(res => res?.distance <= 60)
+    ?.filter(res => res?.distance <= 250)
     ?.sort((r1, r2) => r1?.distance - r2?.distance);
 
   return restLocCoords;

@@ -46,6 +46,7 @@ const MenuCatScreen = ({navigation}) => {
   }, [restaurantData]);
 
   useEffect(() => {
+    Tts.stop();
     return () => {
       setRestaurantId('');
     };
@@ -81,12 +82,6 @@ const MenuCatScreen = ({navigation}) => {
           const newActive = active + 1;
           return setActive(newActive);
         }
-      case SWIPE_LEFT:
-        alert('Left');
-        break;
-      case SWIPE_RIGHT:
-        alert('right');
-        break;
     }
   };
 

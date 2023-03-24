@@ -158,12 +158,6 @@ const SpeakToSearchScreen = ({navigation}) => {
           }
         }
         break;
-      case SWIPE_LEFT:
-        alert('Left');
-        break;
-      case SWIPE_RIGHT:
-        alert('right');
-        break;
     }
   };
 

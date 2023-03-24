@@ -17,9 +17,6 @@ const GestureTapWrapper = ({
     directionalOffsetThreshold: 80,
   };
 
-  const double = () => {
-    alert('double');
-  };
   return (
     <>
       {children}
